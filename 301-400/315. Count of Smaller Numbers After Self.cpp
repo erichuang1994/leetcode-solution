@@ -1,3 +1,4 @@
+// naive tree version
 struct Node {
   int counts;
   bool tag;
@@ -110,5 +111,58 @@ public:
     }
     cout << endl;
     return res;
+  }
+};
+// merge sort version
+class Solution {
+public:
+  void mergeSort(vector<pair<int, int>> &nums, int l, int r, vector<int> &ret,
+                 vector<pair<int, int>> &tmp) {
+    if (l == r) {
+      return;
+    }
+    int mid = (l + r) / 2;
+    // sort
+    this->mergeSort(nums, l, mid, ret, tmp);
+    this->mergeSort(nums, mid + 1, r, ret, tmp);
+    // merge
+    int x = mid;
+    int y = r;
+    for (int i = r; i >= l; i--) {
+      if (x == l - 1) {
+        while (i >= l) {
+          tmp[i--] = nums[y--];
+        }
+        break;
+      }
+      if (y == mid) {
+        while (i >= l) {
+          tmp[i--] = nums[x--];
+        }
+        break;
+      }
+      if (nums[x].first <= nums[y].first) {
+        tmp[i] = nums[y--];
+      } else {
+        tmp[i] = nums[x];
+        ret[nums[x--].second] += y - mid;
+      }
+    }
+    for (int i = l; i <= r; i++) {
+      nums[i] = tmp[i];
+    }
+  }
+  vector<int> countSmaller(vector<int> &nums) {
+    if (nums.empty())
+      return vector<int>();
+    vector<int> ret(nums.size(), 0);
+    vector<pair<int, int>> tmp(nums.size(), make_pair(0, 0));
+    vector<pair<int, int>> nums_index;
+    int len = nums.size();
+    for (int i = 0; i < len; i++) {
+      nums_index.push_back(make_pair(nums[i], i));
+    }
+    mergeSort(nums_index, 0, nums.size() - 1, ret, tmp);
+    return ret;
   }
 };
