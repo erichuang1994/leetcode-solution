@@ -7,37 +7,50 @@
  *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
  * };
  */
-// #TODO use binary search complexity is O(log(n)^2)
 class Solution {
 public:
-  int countNodes(TreeNode *root) {
-    if (root == NULL)
-      return 0;
-    pair<int, int> ret;
-    dfs(root, make_pair(0, 0), ret);
-    return pow(2, ret.first) + ret.second;
-  }
-  bool dfs(TreeNode *tmp, pair<int, int> cur, pair<int, int> &ret) {
-    if (tmp->right != NULL) {
-      if (dfs(tmp->right, make_pair(cur.first + 1, cur.second * 2 + 1), ret)) {
+  bool get(TreeNode *root, int target, int l, int r) {
+    TreeNode *tmp = root;
+    int lo = l;
+    int hi = r;
+    while (tmp != NULL) {
+      if (lo == hi && lo == target) {
         return true;
       }
-    }
-    if (tmp->left != NULL) {
-      if (dfs(tmp->left, make_pair(cur.first + 1, cur.second * 2), ret)) {
-        return true;
-      }
-    }
-    if (tmp->left == NULL && tmp->right == NULL) {
-      if (ret.first == -1) {
-        ret.first = cur.first;
-        ret.second = cur.second;
-      } else if (cur.first > ret.first) {
-        ret.first = cur.first;
-        ret.second = cur.second;
-        return true;
+      int mid = (lo + hi) / 2;
+      if (target <= mid) {
+        tmp = tmp->left;
+        hi = mid;
+      } else {
+        tmp = tmp->right;
+        lo = mid + 1;
       }
     }
     return false;
+  }
+  int countNodes(TreeNode *root) {
+    // binary search
+    if (root == NULL)
+      return 0;
+    TreeNode *tmp;
+    tmp = root;
+    int max_level = 0;
+    while (tmp->left != NULL) {
+      tmp = tmp->left;
+      max_level++;
+    }
+    int l = pow(2, max_level);
+    int r = (2 * l - 1);
+    int lo = pow(2, max_level);
+    int hi = (2 * lo - 1) + 1;
+    while (lo + 1 < hi) {
+      int mid = (lo + hi) / 2;
+      if (get(root, mid, l, r)) {
+        lo = mid;
+      } else {
+        hi = mid;
+      }
+    }
+    return lo;
   }
 };
