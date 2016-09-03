@@ -14,6 +14,7 @@ public:
       }
       return true;
     }
+    // dp[0] for empty
     int dp[lens + 1];
     if (p[0] == '*') {
       fill_n(dp, lens + 1, 1);
