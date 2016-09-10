@@ -118,9 +118,8 @@ class Solution {
 public:
   void mergeSort(vector<pair<int, int>> &nums, int l, int r, vector<int> &ret,
                  vector<pair<int, int>> &tmp) {
-    if (l == r) {
+    if (l == r)
       return;
-    }
     int mid = (l + r) / 2;
     // sort
     this->mergeSort(nums, l, mid, ret, tmp);
