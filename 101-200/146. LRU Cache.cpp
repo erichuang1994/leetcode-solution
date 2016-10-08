@@ -1,45 +1,40 @@
 class LRUCache {
-public:
-  LRUCache(int capacity) {
-    this->capacity = capacity;
-    t = 0;
-  }
+  unordered_map<int, pair<int, int>> kvc;
+  queue<int> kq;
+  int capacity;
 
+public:
+  LRUCache(int capacity) { this->capacity = capacity; }
   int get(int key) {
-    if (kv.find(key) != kv.end()) {
-      auto timestamp = kt[key];
-      tk.erase(timestamp);
-      t++;
-      kt[key] = t;
-      tk[t] = key;
-      return kv[key];
+    auto it = kvc.find(key);
+    if (it != kvc.end()) {
+      it->second.second += 1;
+      kq.push(key);
+      return it->second.first;
     } else {
       return -1;
     }
   }
-
   void set(int key, int value) {
-    if (kv.find(key) != kv.end()) {
-      auto timestamp = kt[key];
-      tk.erase(timestamp);
-    } else if (kv.size() >= capacity) {
-      auto it = tk.begin();
-      auto rt = it->first;
-      auto rk = it->second;
-      tk.erase(it);
-      kt.erase(rk);
-      kv.erase(rk);
+    auto it = kvc.find(key);
+    if (it != kvc.end()) {
+      it->second.first = value;
+      it->second.second += 1;
+    } else {
+      if (kvc.size() >= capacity) {
+        while (kq.size() > 0) {
+          auto tmp = kq.front();
+          kq.pop();
+          auto it = kvc.find(tmp);
+          it->second.second--;
+          if (it->second.second == 0) {
+            kvc.erase(it);
+            break;
+          }
+        }
+      }
+      kvc.emplace(std::make_pair(key, std::make_pair(value, 1)));
     }
-    t++;
-    kv[key] = value;
-    kt[key] = t;
-    tk[t] = key;
+    kq.push(key);
   }
-
-private:
-  unordered_map<int, int> kv;
-  map<int, int> tk;
-  unordered_map<int, int> kt;
-  int capacity;
-  int t;
 };
