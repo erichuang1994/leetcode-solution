@@ -9,7 +9,7 @@ public:
     }
     while (n > 0) {
       ret.push_back(base[n % 16]);
-      n /= 16;
+      n >>= 4;
     }
     reverse(ret.begin(), ret.end());
     return ret;
