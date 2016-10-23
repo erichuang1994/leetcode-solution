@@ -1,7 +1,7 @@
 class Solution {
 public:
   vector<int> findAnagrams(string s, string p) {
-    vector<int> flag(27, 0);
+    vector<int> flag(26, 0);
     vector<int> ret;
     if (s.size() < p.size()) {
       return ret;
@@ -15,7 +15,7 @@ public:
     }
     for (int i = 0; i <= s.size() - p.size(); ++i) {
       bool f = true;
-      for (int j = 0; j < 27; ++j) {
+      for (int j = 0; j < 26; ++j) {
         if (flag[j]) {
           f = false;
           break;
