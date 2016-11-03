@@ -27,3 +27,23 @@ public:
     return ret;
   }
 };
+
+// 维护元素可以向右扩展的最大长度,注意进栈的时候要考虑可以向左扩展的最大长度
+// class Solution {
+// public:
+//   int largestRectangleArea(vector<int> &heights) {
+//     heights.push_back(0);
+//     stack<int> s;
+//     int ret = 0;
+//     for (int i = 0; i < heights.size(); ++i) {
+//       while (!s.empty() && heights[s.top()] >= heights[i]) {
+//         auto tmp = s.top();
+//         s.pop();
+//         int sidx = s.size() > 0 ? s.top() + 1 : 0;
+//         ret = max(ret, (i - sidx) * heights[tmp]);
+//       }
+//       s.emplace(i);
+//     }
+//     return ret;
+//   }
+// };
